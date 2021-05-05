@@ -1,0 +1,37 @@
+[
+  {
+    "flightId": 0,
+    "flightNumber": 1863,
+    "departureAirportIATACode": "SEA",
+    "arrivalAirportIATACode": "GDN",
+    "departureDate": "2015-11-14T02:36:49 -01:00"
+  },
+  {
+    "flightId": 1,
+    "flightNumber": 1697,
+    "departureAirportIATACode": "ANC",
+    "arrivalAirportIATACode": "PPX",
+    "departureDate": "2020-05-03T05:32:44 -02:00"
+  },
+  {
+    "flightId": 2,
+    "flightNumber": 3298,
+    "departureAirportIATACode": "LAX",
+    "arrivalAirportIATACode": "GDN",
+    "departureDate": "2017-12-03T04:02:12 -01:00"
+  },
+  {
+    "flightId": 3,
+    "flightNumber": 8055,
+    "departureAirportIATACode": "SEA",
+    "arrivalAirportIATACode": "KRK",
+    "departureDate": "2015-10-24T10:24:02 -02:00"
+  },
+  {
+    "flightId": 4,
+    "flightNumber": 6497,
+    "departureAirportIATACode": "LAX",
+    "arrivalAirportIATACode": "GDN",
+    "departureDate": "2021-01-18T04:09:53 -01:00"
+  }
+]
