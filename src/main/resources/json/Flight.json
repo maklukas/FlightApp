@@ -1,37 +1,37 @@
 [
   {
     "flightId": 0,
-    "flightNumber": 1863,
-    "departureAirportIATACode": "SEA",
-    "arrivalAirportIATACode": "GDN",
-    "departureDate": "2015-11-14T02:36:49 -01:00"
+    "flightNumber": 7502,
+    "departureAirportIATACode": "ANC",
+    "arrivalAirportIATACode": "PPX",
+    "departureDate": "2015-02-01T11:27:22-01:00"
   },
   {
     "flightId": 1,
-    "flightNumber": 1697,
-    "departureAirportIATACode": "ANC",
-    "arrivalAirportIATACode": "PPX",
-    "departureDate": "2020-05-03T05:32:44 -02:00"
+    "flightNumber": 1041,
+    "departureAirportIATACode": "LAX",
+    "arrivalAirportIATACode": "MIT",
+    "departureDate": "2020-08-18T03:12:22-02:00"
   },
   {
     "flightId": 2,
-    "flightNumber": 3298,
+    "flightNumber": 9578,
     "departureAirportIATACode": "LAX",
-    "arrivalAirportIATACode": "GDN",
-    "departureDate": "2017-12-03T04:02:12 -01:00"
+    "arrivalAirportIATACode": "MIT",
+    "departureDate": "2021-02-04T12:36:43-01:00"
   },
   {
     "flightId": 3,
-    "flightNumber": 8055,
-    "departureAirportIATACode": "SEA",
+    "flightNumber": 6575,
+    "departureAirportIATACode": "YYZ",
     "arrivalAirportIATACode": "KRK",
-    "departureDate": "2015-10-24T10:24:02 -02:00"
+    "departureDate": "2021-03-18T05:29:42-01:00"
   },
   {
     "flightId": 4,
-    "flightNumber": 6497,
-    "departureAirportIATACode": "LAX",
-    "arrivalAirportIATACode": "GDN",
-    "departureDate": "2021-01-18T04:09:53 -01:00"
+    "flightNumber": 6673,
+    "departureAirportIATACode": "ANC",
+    "arrivalAirportIATACode": "KRK",
+    "departureDate": "2017-03-31T11:04:22-02:00"
   }
 ]

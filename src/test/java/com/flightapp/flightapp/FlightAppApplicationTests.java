@@ -1,11 +1,17 @@
 package com.flightapp.flightapp;
 
-import com.flightapp.domain.Baggage;
-import com.flightapp.domain.Load;
+import com.flightapp.domain.FlightData;
 import com.flightapp.mapper.JsonFromFilesMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.text.ParseException;
+import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class FlightAppApplicationTests {
@@ -35,11 +41,19 @@ public class FlightAppApplicationTests {
     @Test
     public void shouldParseJSONFlightToObject() {
         //given
-        mapper.getFlightData().forEach(System.out::println);
+//        List<FlightData> flights = new ArrayList<>(mapper.getFlightData());
+//        List<ZonedDateTime> dates = flights.stream()
+//                .map(FlightData::getDepartureDate)
+//                .collect(Collectors.toList());
+//        dates.forEach(System.out::println);
+
+        ZonedDateTime firstTime = LocalDateTime.of(2021,5,5,5,45,30).atZone(ZoneId.of("Asia/Tokyo"));
         //when
-
+        LocalDate toCompare = LocalDate.of(2021,5,4);
+        ZonedDateTime second = ZonedDateTime.of(toCompare, firstTime.toLocalTime(), firstTime.getZone());
         //then
-
+        Assertions.assertTrue(firstTime.isEqual(second));
+        System.out.println(firstTime);
     }
 
 }
