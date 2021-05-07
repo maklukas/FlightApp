@@ -2,13 +2,17 @@ package com.flightapp.service;
 
 import com.flightapp.config.ConfigData;
 import com.flightapp.domain.*;
+import com.flightapp.domain.dto.FlightDto;
+import com.flightapp.domain.dto.LoadDto;
 import com.flightapp.mapper.JsonFromFilesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,72 +20,56 @@ import java.util.stream.Collectors;
 public class LoadService {
 
     private final JsonFromFilesMapper mapper;
+    private final AirportService airportService;
 
     @Autowired
-    public LoadService(JsonFromFilesMapper mapper) {
+    public LoadService(JsonFromFilesMapper mapper, @Lazy AirportService airportService) {
         this.mapper = mapper;
+        this.airportService = airportService;
     }
 
-    public BigDecimal getCargoWeight(int flightId) {
-        List<FlightLoad> flightLoads = mapper.getFlightLoads();
-        List<Load> cargo = flightLoads.stream()
-                .filter(flight -> flight.getFlightId() == flightId)
-                .findAny()
-                .get()
-                .getCargo();
+    public List<FlightLoad> getLoads() {
+        return mapper.getFlightLoads();
+    }
 
+    public BigDecimal getCargoWeight(int flightNumber, LocalDate date) {
+        FlightData flightData = airportService.getTheFlightData(flightNumber, date);
+        FlightLoad theLoad = getTheFlightLoad(flightData);
+        List<Load> cargo = new ArrayList<>();
+        if (theLoad != null) {
+            cargo = theLoad.getCargo();
+        }
         return calculateWeight(cargo);
     }
 
-
-    public BigDecimal getCargoWeight(FlightData flight) {
-        List<FlightLoad> flightLoads = mapper.getFlightLoads();
-        List<Load> cargo = flightLoads.stream()
-                .filter(f -> f.getFlightId() == flight.getFlightId())
-                .findAny()
-                .get()
-                .getCargo();
-
-        return calculateWeight(cargo);
-    }
-
-    public BigDecimal getBaggageWeight(int flightId) {
-        List<FlightLoad> flightLoads = mapper.getFlightLoads();
-        List<Load> baggage = flightLoads.stream()
-                .filter(flight -> flight.getFlightId() == flightId)
-                .findAny()
-                .get()
-                .getBaggage();
-
+    public BigDecimal getBaggageWeight(int flightNumber, LocalDate date) {
+        FlightData flightData = airportService.getTheFlightData(flightNumber, date);
+        FlightLoad theLoad = getTheFlightLoad(flightData);
+        List<Load> baggage = new ArrayList<>();
+        if (theLoad != null) {
+            baggage = theLoad.getBaggage();
+        }
         return calculateWeight(baggage);
     }
 
-    public BigDecimal getBaggageWeight(FlightData flight) {
-        List<FlightLoad> flightLoads = mapper.getFlightLoads();
-        List<Load> baggage = flightLoads.stream()
-                .filter(f -> f.getFlightId() == flight.getFlightId())
+    private FlightLoad getTheFlightLoad(FlightData flightData) {
+        if (flightData == null) {
+            return null;
+        }
+        return getLoads().stream()
+                .filter(flight -> flight.getFlightId() == flightData.getFlightId())
                 .findAny()
-                .get()
-                .getBaggage();
-
-        return calculateWeight(baggage);
+                .orElse(null);
     }
 
-    public BigDecimal getTotalWeight(FlightData flight) {
-        BigDecimal result = getBaggageWeight(flight);
-        result = result.add(getCargoWeight(flight));
-        return result;
-    }
-
-    public BigDecimal getTotalWeight(int flightId) {
-        BigDecimal result = getBaggageWeight(flightId);
-        result = result.add(getCargoWeight(flightId));
+    public BigDecimal getTotalWeight(int flightNumber, LocalDate date) {
+        BigDecimal result = getBaggageWeight(flightNumber, date);
+        result = result.add(getCargoWeight(flightNumber, date));
         return result;
     }
 
     private BigDecimal calculateWeight(List<Load> loads) {
         BigDecimal result = BigDecimal.ZERO;
-
         for(Load c: loads) {
             if (c.getWeightUnit().equals("lb")) {
                 result = result.add(ConfigData.CONVERTER_LB_TO_KG_VALUE.multiply(BigDecimal.valueOf(c.getWeight())));
@@ -92,19 +80,16 @@ public class LoadService {
         return result;
     }
 
-    private long calculateBaggageQty(FlightData flight) {
-        List<FlightLoad> flightLoads = mapper.getFlightLoads();
-        List<Load> baggage = flightLoads.stream()
-                .filter(f -> f.getFlightId() == flight.getFlightId())
-                .findAny()
-                .get()
-                .getBaggage();
-
+    private long calculateBaggageQty(FlightData flightData) {
+        FlightLoad flightLoad = getTheFlightLoad(flightData);
+        List<Load> baggage = new ArrayList<>();
+        if (flightLoad != null) {
+            baggage = flightLoad.getBaggage();
+        }
         return calculateNumberOfLoads(baggage);
     }
 
     private long calculateBaggageQty(List<FlightData> flight) {
-        List<FlightLoad> flightLoads = mapper.getFlightLoads();
         long result = 0;
         for(FlightData flightData: flight) {
             result += calculateBaggageQty(flightData);
@@ -138,5 +123,24 @@ public class LoadService {
         return calculateBaggageQty(flightData);
     }
 
+
+
+    public LoadDto getLoadInfo(int flightNumber, LocalDate date) {
+        FlightData flightData = airportService.getTheFlightData(flightNumber, date);
+        ZonedDateTime zonedDateTime;
+
+        if (flightData != null) {
+            zonedDateTime = flightData.getDepartureDate();
+        } else {
+            return new LoadDto();
+        }
+                return new LoadDto(
+                flightNumber,
+                zonedDateTime,
+                getCargoWeight(flightNumber, date),
+                getBaggageWeight(flightNumber, date),
+                getTotalWeight(flightNumber, date)
+        );
+    }
 
 }

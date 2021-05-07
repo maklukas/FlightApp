@@ -26,6 +26,15 @@ class AirportServiceTest {
     }
 
     @Test
+    void shouldGetNullNumberOfFlightsDeparting() {
+        //given
+        //when
+        long resultNull = service.getNumberOfFlightsDeparting("ABCDEF", LocalDate.of(3000,8,18));
+        //then
+        assertEquals(0, resultNull);
+    }
+
+    @Test
     void shouldGetNumberOfFlightsArriving() {
         //given
         //when
@@ -34,5 +43,18 @@ class AirportServiceTest {
         //then
         assertEquals(1, result1);
         assertEquals(0, result0);
+    }
+
+    @Test
+    void shouldGetNullNumberOfFlightsArriving() {
+        //given
+        //when
+        long resultNull = service.getNumberOfFlightsArriving("ABCDEF", LocalDate.of(3000,8,18));
+        long resultNull2 = service.getNumberOfFlightsArriving("ABCDEF", null);
+        long resultNull3 = service.getNumberOfFlightsArriving(null, null);
+        //then
+        assertEquals(0, resultNull);
+        assertEquals(0, resultNull2);
+        assertEquals(0, resultNull3);
     }
 }
